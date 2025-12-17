@@ -26,18 +26,48 @@
 
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
       color: var(--text);
       line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Animated background particles */
+    .bg-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: float 20s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: 0.5; }
+      50% { transform: translateY(-100vh) translateX(50px); opacity: 0.8; }
+      90% { opacity: 0.5; }
     }
 
     a {
       color: var(--accent);
       text-decoration: none;
+      transition: color 0.3s ease;
     }
     a:hover {
+      color: #4ade80;
       text-decoration: underline;
     }
 
@@ -45,6 +75,8 @@
       max-width: 1080px;
       margin: 0 auto;
       padding: 24px 16px 64px;
+      position: relative;
+      z-index: 1;
     }
 
     header {
@@ -53,11 +85,7 @@
       justify-content: space-between;
       gap: 24px;
       padding: 24px 24px 28px;
-      background: linear-gradient(
-          135deg,
-          rgba(34, 197, 94, 0.18),
-          transparent
-        ),
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.18), transparent),
         rgba(15, 23, 42, 0.96);
       border-radius: 18px;
       border: 1px solid rgba(148, 163, 184, 0.25);
@@ -66,6 +94,18 @@
       top: 16px;
       z-index: 10;
       backdrop-filter: blur(16px);
+      animation: slideDown 0.6s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .hero-main {
@@ -81,19 +121,47 @@
       height: 72px;
       border-radius: 999px;
       border: 2px solid rgba(148, 163, 184, 0.5);
-      background: #020617;
+      background: linear-gradient(135deg, #064e3b, #020617);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
       font-size: 24px;
       color: var(--accent);
+      position: relative;
+      overflow: hidden;
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    .avatar::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(34, 197, 94, 0.3), transparent);
+      animation: rotate 4s linear infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      50% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     h1 {
       margin: 0;
       font-size: 28px;
       letter-spacing: 0.02em;
+      background: linear-gradient(135deg, #e5e7eb, #bfdbfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .headline {
@@ -118,6 +186,14 @@
       border: 1px solid rgba(34, 197, 94, 0.3);
       text-transform: uppercase;
       letter-spacing: 0.06em;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .tag:hover {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.5);
+      transform: translateY(-2px);
     }
 
     .hero-meta {
@@ -153,16 +229,38 @@
       color: var(--text);
       cursor: pointer;
       text-decoration: none;
-      transition: all 0.16s ease-out;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
     .btn-primary {
       border-color: transparent;
       background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #022c22;
       font-weight: 600;
     }
+
     .btn:hover {
-      transform: translateY(-1px);
+      transform: translateY(-2px);
       box-shadow: 0 12px 26px rgba(15, 23, 42, 0.65);
     }
 
@@ -180,7 +278,33 @@
       border: 1px solid rgba(30, 64, 175, 0.45);
       padding: 18px 18px 20px;
       box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+      opacity: 0;
+      animation: fadeInUp 0.6s ease-out forwards;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+
+    section:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 50px rgba(15, 23, 42, 0.95);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    section:nth-child(1) { animation-delay: 0.1s; }
+    section:nth-child(2) { animation-delay: 0.2s; }
+    section:nth-child(3) { animation-delay: 0.3s; }
+    section:nth-child(4) { animation-delay: 0.4s; }
+    section:nth-child(5) { animation-delay: 0.5s; }
+    section:nth-child(6) { animation-delay: 0.6s; }
 
     h2 {
       margin: 0 0 10px;
@@ -188,6 +312,23 @@
       text-transform: uppercase;
       letter-spacing: 0.12em;
       color: #bfdbfe;
+      position: relative;
+      padding-bottom: 8px;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      transition: width 0.4s ease;
+    }
+
+    section:hover h2::after {
+      width: 80px;
     }
 
     .section-subtitle {
@@ -215,6 +356,13 @@
       border: 1px solid rgba(148, 163, 184, 0.35);
       color: var(--text-muted);
       background: rgba(15, 23, 42, 0.9);
+      transition: all 0.3s ease;
+    }
+
+    .pill:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: scale(1.05);
     }
 
     .skills-grid {
@@ -230,6 +378,29 @@
       background: radial-gradient(circle at top left, #1e293b, #020617);
       border: 1px solid rgba(31, 41, 55, 0.9);
       font-size: 13px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skills-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .skills-card:hover::before {
+      left: 100%;
+    }
+
+    .skills-card:hover {
+      border-color: rgba(34, 197, 94, 0.5);
+      transform: translateY(-4px);
     }
 
     .skills-card h3 {
@@ -257,11 +428,39 @@
       background: radial-gradient(circle at top right, #064e3b, #020617);
       border: 1px solid rgba(22, 163, 74, 0.5);
       font-size: 13px;
+      transition: all 0.4s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.15), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .project-card:hover::after {
+      opacity: 1;
+    }
+
+    .project-card:hover {
+      border-color: rgba(34, 197, 94, 0.8);
+      transform: translateX(8px) scale(1.02);
+      box-shadow: -8px 8px 24px rgba(34, 197, 94, 0.2);
     }
 
     .project-title {
       font-weight: 600;
       margin-bottom: 4px;
+      position: relative;
+      z-index: 1;
     }
 
     .project-meta {
@@ -270,6 +469,8 @@
       letter-spacing: 0.12em;
       color: #6ee7b7;
       margin-bottom: 4px;
+      position: relative;
+      z-index: 1;
     }
 
     .timeline {
@@ -283,6 +484,29 @@
       border-left: 2px solid rgba(55, 65, 81, 0.9);
       padding-left: 10px;
       margin-left: 3px;
+      transition: border-color 0.3s ease;
+      position: relative;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+      transition: transform 0.3s ease;
+    }
+
+    .timeline-item:hover::before {
+      transform: scale(1.3);
+    }
+
+    .timeline-item:hover {
+      border-left-color: var(--accent);
     }
 
     .timeline-title {
@@ -312,6 +536,13 @@
 
     .cert-list li {
       margin-bottom: 3px;
+      transition: color 0.3s ease, transform 0.3s ease;
+      cursor: default;
+    }
+
+    .cert-list li:hover {
+      color: var(--accent);
+      transform: translateX(4px);
     }
 
     .contact-grid {
@@ -327,6 +558,13 @@
       border-radius: 10px;
       background: rgba(15, 23, 42, 0.9);
       border: 1px solid rgba(55, 65, 81, 0.9);
+      transition: all 0.3s ease;
+    }
+
+    .contact-card:hover {
+      border-color: var(--accent);
+      background: rgba(34, 197, 94, 0.05);
+      transform: translateY(-2px);
     }
 
     footer {
@@ -334,6 +572,25 @@
       font-size: 11px;
       color: var(--text-muted);
       text-align: center;
+      opacity: 0;
+      animation: fadeIn 1s ease-out 0.8s forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Scroll progress indicator */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #4ade80);
+      z-index: 100;
+      transform-origin: left;
+      transition: transform 0.1s ease;
     }
 
     @media (max-width: 800px) {
@@ -353,6 +610,12 @@
   </style>
 </head>
 <body>
+  <!-- Scroll progress bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Background particles -->
+  <div class="bg-particles" id="particles"></div>
+
   <div class="page">
     <header>
       <div class="hero-main">
@@ -373,19 +636,9 @@
       <div class="hero-meta">
         <div>Newark, NJ · Open to Remote &amp; Hybrid</div>
         <a href="mailto:s.frimpong0303@gmail.com">s.frimpong0303@gmail.com</a>
-        <a
-          href="https://www.linkedin.com/in/stephen-frimpong-"
-          target="_blank"
-          rel="noopener"
-          >LinkedIn Profile</a
-        >
+        <a href="https://www.linkedin.com/in/stephen-frimpong-" target="_blank" rel="noopener">LinkedIn Profile</a>
         <div class="hero-buttons">
-          <a
-            class="btn btn-primary"
-            href="Stephen-Frimpong-IT-Support-Resume.pdf"
-            target="_blank"
-            >Download Resume</a
-          >
+          <a class="btn btn-primary" href="Stephen-Frimpong-IT-Support-Resume.pdf" target="_blank">Download Resume</a>
           <a class="btn" href="#projects">View IT Projects</a>
         </div>
       </div>
@@ -397,16 +650,9 @@
         <section id="about">
           <h2>About</h2>
           <div class="about-text">
-            I’m an IT Support Technician with hands-on experience supporting
-            students, faculty, and staff in college environments. I troubleshoot
-            Windows systems, software issues, login problems, and network
-            connectivity while delivering clear, patient customer support.
+            I'm an IT Support Technician with hands-on experience supporting students, faculty, and staff in college environments. I troubleshoot Windows systems, software issues, login problems, and network connectivity while delivering clear, patient customer support.
             <br /><br />
-            My background includes formal coursework in Computer Science,
-            Google’s IT Support and Cybersecurity Professional Certificates, and
-            Cisco Networking Academy labs. I enjoy diagnosing issues,
-            documenting solutions, and making technology easier and more
-            reliable for end users.
+            My background includes formal coursework in Computer Science, Google's IT Support and Cybersecurity Professional Certificates, and Cisco Networking Academy labs. I enjoy diagnosing issues, documenting solutions, and making technology easier and more reliable for end users.
           </div>
         </section>
 
@@ -414,48 +660,23 @@
           <h2>Experience</h2>
           <div class="timeline">
             <div class="timeline-item">
-              <div class="timeline-title">
-                Help Desk Assistant — Essex County College
-              </div>
+              <div class="timeline-title">Help Desk Assistant — Essex County College</div>
               <div class="timeline-meta">2022–2023 · Newark, NJ</div>
               <ul>
-                <li>
-                  Resolved login issues, password resets, software errors, and
-                  system access problems for students and faculty.
-                </li>
-                <li>
-                  Troubleshot Windows, Wi-Fi/VPN failures, printing errors, and
-                  application crashes.
-                </li>
-                <li>
-                  Installed software, configured devices, and performed OS
-                  updates across campus lab environments.
-                </li>
-                <li>
-                  Documented recurring issues and escalated complex technical
-                  problems to speed up resolution.
-                </li>
+                <li>Resolved login issues, password resets, software errors, and system access problems for students and faculty.</li>
+                <li>Troubleshot Windows, Wi-Fi/VPN failures, printing errors, and application crashes.</li>
+                <li>Installed software, configured devices, and performed OS updates across campus lab environments.</li>
+                <li>Documented recurring issues and escalated complex technical problems to speed up resolution.</li>
               </ul>
             </div>
 
             <div class="timeline-item">
-              <div class="timeline-title">
-                Office Assistant — Essex County College
-              </div>
+              <div class="timeline-title">Office Assistant — Essex County College</div>
               <div class="timeline-meta">2022–2023 · Newark, NJ</div>
               <ul>
-                <li>
-                  Provided front-line technical support for computers, printers,
-                  and campus systems.
-                </li>
-                <li>
-                  Assisted 100+ students monthly with login problems, system
-                  navigation, and basic software issues.
-                </li>
-                <li>
-                  Supported daily operations and maintained organized records to
-                  improve workflow efficiency.
-                </li>
+                <li>Provided front-line technical support for computers, printers, and campus systems.</li>
+                <li>Assisted 100+ students monthly with login problems, system navigation, and basic software issues.</li>
+                <li>Supported daily operations and maintained organized records to improve workflow efficiency.</li>
               </ul>
             </div>
           </div>
@@ -464,21 +685,14 @@
         <section id="projects">
           <h2>Projects</h2>
           <div class="section-subtitle">
-            Selected hands-on labs and personal projects demonstrating my IT
-            support and troubleshooting skills.
+            Selected hands-on labs and personal projects demonstrating my IT support and troubleshooting skills.
           </div>
           <div class="project-list">
             <div class="project-card">
               <div class="project-meta">Remote Support · Windows · Ticketing</div>
-              <div class="project-title">
-                Remote IT Support Practice Labs
-              </div>
+              <div class="project-title">Remote IT Support Practice Labs</div>
               <div>
-                Simulated help desk environment troubleshooting Windows login
-                failures, application crashes, and connectivity issues over
-                remote tools. Practiced gathering user details, reproducing
-                issues, and documenting clear step-by-step resolutions as if
-                working a real ticket queue.
+                Simulated help desk environment troubleshooting Windows login failures, application crashes, and connectivity issues over remote tools. Practiced gathering user details, reproducing issues, and documenting clear step-by-step resolutions as if working a real ticket queue.
               </div>
               <div class="pill-row">
                 <span class="pill">Windows 10/11</span>
@@ -489,17 +703,10 @@
             </div>
 
             <div class="project-card">
-              <div class="project-meta">
-                Networking · DNS/DHCP · VPN · Wireshark
-              </div>
-              <div class="project-title">
-                Network Troubleshooting Lab (DNS, DHCP, VPN)
-              </div>
+              <div class="project-meta">Networking · DNS/DHCP · VPN · Wireshark</div>
+              <div class="project-title">Network Troubleshooting Lab (DNS, DHCP, VPN)</div>
               <div>
-                Built a small virtual lab to diagnose network connectivity
-                issues. Tested DNS and DHCP misconfigurations, validated IP
-                addressing and gateway settings, and used basic packet
-                inspection to understand how traffic flows through the network.
+                Built a small virtual lab to diagnose network connectivity issues. Tested DNS and DHCP misconfigurations, validated IP addressing and gateway settings, and used basic packet inspection to understand how traffic flows through the network.
               </div>
               <div class="pill-row">
                 <span class="pill">DNS</span>
@@ -512,14 +719,9 @@
 
             <div class="project-card">
               <div class="project-meta">Virtualization · Imaging · Deployment</div>
-              <div class="project-title">
-                VM Deployment &amp; System Imaging
-              </div>
+              <div class="project-title">VM Deployment &amp; System Imaging</div>
               <div>
-                Created and imaged Windows virtual machines to simulate a small
-                IT environment. Built base images with required applications,
-                cloned VMs for rapid deployment, and practiced basic system
-                hardening and updates before handing systems off to “users.”
+                Created and imaged Windows virtual machines to simulate a small IT environment. Built base images with required applications, cloned VMs for rapid deployment, and practiced basic system hardening and updates before handing systems off to "users."
               </div>
               <div class="pill-row">
                 <span class="pill">VirtualBox/VMware</span>
@@ -530,14 +732,9 @@
 
             <div class="project-card">
               <div class="project-meta">Troubleshooting · Google Labs</div>
-              <div class="project-title">
-                Google IT Support Troubleshooting Labs
-              </div>
+              <div class="project-title">Google IT Support Troubleshooting Labs</div>
               <div>
-                Completed multiple scenarios from Google’s IT Support program,
-                including OS boot issues, file permission problems, and
-                misconfigured services. Focused on using a structured
-                troubleshooting approach and clear documentation.
+                Completed multiple scenarios from Google's IT Support program, including OS boot issues, file permission problems, and misconfigured services. Focused on using a structured troubleshooting approach and clear documentation.
               </div>
               <div class="pill-row">
                 <span class="pill">Linux &amp; Windows</span>
@@ -593,15 +790,11 @@
           <h2>Education</h2>
           <div class="timeline">
             <div class="timeline-item">
-              <div class="timeline-title">
-                Rutgers University — B.S. Computer Science
-              </div>
+              <div class="timeline-title">Rutgers University — B.S. Computer Science</div>
               <div class="timeline-meta">2024–2026 (In Progress)</div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-title">
-                Essex County College — A.A.S. Software Development Technology
-              </div>
+              <div class="timeline-title">Essex County College — A.A.S. Software Development Technology</div>
               <div class="timeline-meta">Completed 2024</div>
             </div>
           </div>
@@ -621,24 +814,16 @@
         <section id="contact">
           <h2>Contact</h2>
           <div class="section-subtitle">
-            Open to Remote, Hybrid, or On-Site IT Support roles (strong
-            preference for remote/hybrid).
+            Open to Remote, Hybrid, or On-Site IT Support roles (strong preference for remote/hybrid).
           </div>
           <div class="contact-grid">
             <div class="contact-card">
               <strong>Email</strong><br />
-              <a href="mailto:s.frimpong0303@gmail.com"
-                >s.frimpong0303@gmail.com</a
-              >
+              <a href="mailto:s.frimpong0303@gmail.com">s.frimpong0303@gmail.com</a>
             </div>
             <div class="contact-card">
               <strong>LinkedIn</strong><br />
-              <a
-                href="https://www.linkedin.com/in/stephen-frimpong-"
-                target="_blank"
-                rel="noopener"
-                >linkedin.com/in/stephen-frimpong-</a
-              >
+              <a href="https://www.linkedin.com/in/stephen-frimpong-" target="_blank" rel="noopener">linkedin.com/in/stephen-frimpong-</a>
             </div>
             <div class="contact-card">
               <strong>Location</strong><br />
@@ -656,6 +841,26 @@
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
-</body>
-</html>
+
+    // Create animated particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDelay = Math.random() * 20 + 's';
+      p.style.animationDuration = (15 + Math.random() * 10) + 's';
+      particlesContainer.appendChild(p);
+    }
+
+    // Scroll progress bar
+    const scrollProgress = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const st = h.scrollTop || document.body.scrollTop;
+      const sh = h.scrollHeight || document.body.scrollHeight;
+      const percent = st / (sh - h.clientHeight) * 100;
+      scrollProgress.style.transform = `scaleX(${percent / 100})`;
+    });
+
+    //
